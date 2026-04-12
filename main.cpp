@@ -3,70 +3,46 @@
 #else
 #include <GL/glut.h>
 #endif
-#include <iostream>
-#include "src/texture.hpp"
 
-Texture menuChickenTex;
-
-void init()
-{
-   if (!menuChickenTex.load("assets/textures/menu-chicken.png"))
-   {
-      std::cerr << "Failed to load menuChicken texture\n";
-   }
-}
+#include "src/utils.hpp"
 
 void display()
 {
    glClear(GL_COLOR_BUFFER_BIT);
 
-   glLoadIdentity(); // IMPORTANT
-
-   menuChickenTex.bind();
-
-   glBegin(GL_QUADS);
-   glTexCoord2f(0, 0);
+   glBegin(GL_TRIANGLES);
+   COLORS::RED.apply();
    glVertex2f(-0.5f, -0.5f);
-   glTexCoord2f(1, 0);
+
+   COLORS::GREEN.apply();
    glVertex2f(0.5f, -0.5f);
-   glTexCoord2f(1, 1);
-   glVertex2f(0.5f, 0.5f);
-   glTexCoord2f(0, 1);
-   glVertex2f(-0.5f, 0.5f);
+
+   COLORS::BLUE.apply();
+   glVertex2f(0.0f, 0.5f);
    glEnd();
 
-   menuChickenTex.unbind();
-
-   glutSwapBuffers();
-}
-
-void reshape(int w, int h)
-{
-   glViewport(0, 0, w, h);
-
-   glMatrixMode(GL_PROJECTION);
-   glLoadIdentity();
-
-   float aspect = (float)w / (float)h;
-   glOrtho(-aspect, aspect, -1, 1, -1, 1);
-
-   glMatrixMode(GL_MODELVIEW);
-   glLoadIdentity();
+   glFlush();
 }
 
 int main(int argc, char **argv)
 {
    glutInit(&argc, argv);
-   glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGBA);
+   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB | GLUT_MULTISAMPLE);
+   glutInitWindowSize(Utils::WINDOW_WIDTH, Utils::WINDOW_HEIGHT);
 
-   glutInitWindowSize(800, 600);
-   glutCreateWindow("Texture Test");
+   int screenWidth = glutGet(GLUT_SCREEN_WIDTH);
+   int screenHeight = glutGet(GLUT_SCREEN_HEIGHT);
+   int windowX = (screenWidth - Utils::WINDOW_WIDTH) / 2;
+   int windowY = (screenHeight - Utils::WINDOW_HEIGHT) / 2;
+   glutInitWindowPosition(windowX, windowY);
 
-   init();
+   glutCreateWindow("Catch The Eggs");
+   glEnable(GL_MULTISAMPLE);
+
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
    glutDisplayFunc(display);
-   glutReshapeFunc(reshape);
-
+   glEnable(GL_MULTISAMPLE);
    glutMainLoop();
 
    return 0;
