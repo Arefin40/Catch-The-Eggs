@@ -10,6 +10,9 @@
 #include "texture.hpp"
 #pragma endregion
 
+#define W float(Config::Window::WIDTH)
+#define H float(Config::Window::HEIGHT)
+
 namespace Draw
 {
    inline void rect(int x, int y, float width, float height, const Color &color, bool filled = true)
@@ -25,28 +28,15 @@ namespace Draw
 
    inline void grass(const Texture &grassTex)
    {
-      float w = Config::Window::WIDTH;
       float h = Config::GRASS::TILE_HEIGHT;
 
       if (grassTex.isLoaded())
       {
-         grassTex.bind();
-         COLORS::WHITE.apply();
-         float tw = w / Config::GRASS::TILE_WIDTH;
-
-         // clang-format off
-         glBegin(GL_QUADS);
-         glTexCoord2f(0, 0);  glVertex2f(0, 0);
-         glTexCoord2f(tw, 0); glVertex2f(w, 0);
-         glTexCoord2f(tw, 1); glVertex2f(w, h);
-         glTexCoord2f(0, 1);  glVertex2f(0, h);
-         glEnd();
-         // clang-format on
-
-         grassTex.unbind();
+         float tw = W / Config::GRASS::TILE_WIDTH;
+         grassTex.draw(0, 0, W, h, 0, 0, tw, 1);
       }
       else
-         Draw::rect(0, 0, w, h, COLORS::GREEN, true);
+         Draw::rect(0, 0, W, h, COLORS::GREEN, true);
    }
 
    inline void sky()
@@ -60,5 +50,30 @@ namespace Draw
       glVertex2f(Config::Window::WIDTH, 0);
       glVertex2f(0, 0);
       glEnd();
+   }
+}
+
+namespace Text
+{
+   inline int width(const std::string &text, void *font = Font::SM)
+   {
+      int w = 0;
+      for (char c : text)
+         w += glutBitmapWidth(font, c);
+      return w;
+   }
+
+   inline void draw(const std::string &text, float x, float y, const Color &color, void *font = Font::SM)
+   {
+      color.apply();
+      glRasterPos2f(x, y);
+      for (char c : text)
+         glutBitmapCharacter(font, c);
+   }
+
+   inline void centered(const std::string &text, float y, const Color &color, void *font = Font::SM)
+   {
+      float cx = (W - width(text, font)) / 2.0f;
+      draw(text, cx, y, color, font);
    }
 }

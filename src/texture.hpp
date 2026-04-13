@@ -23,10 +23,7 @@ private:
 public:
    Texture() : textureId(0), width(0), height(0), channels(0), loaded(false) {}
 
-   ~Texture()
-   {
-      unload();
-   }
+   ~Texture() { unload(); }
 
    bool load(const std::string &filepath, bool repeat = false)
    {
@@ -81,6 +78,26 @@ public:
 
    void unbind() const
    {
+      glBindTexture(GL_TEXTURE_2D, 0);
+   }
+
+   void draw(float x, float y, float w, float h, float u0 = 0, float v0 = 0, float u1 = 1, float v1 = 1) const
+   {
+      if (!loaded || textureId == 0)
+         return;
+
+      glEnable(GL_TEXTURE_2D);
+      glBindTexture(GL_TEXTURE_2D, textureId);
+
+      // clang-format off
+      glBegin(GL_QUADS);
+      glTexCoord2f(u0, v0); glVertex2f(x, y);
+      glTexCoord2f(u1, v0); glVertex2f(x + w, y);
+      glTexCoord2f(u1, v1); glVertex2f(x + w, y + h);
+      glTexCoord2f(u0, v1); glVertex2f(x, y + h);
+      glEnd();
+      // clang-format on
+
       glBindTexture(GL_TEXTURE_2D, 0);
    }
 
