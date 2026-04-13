@@ -1,7 +1,14 @@
+#pragma once
+
+#pragma region Includes
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <GL/glut.h>
+#endif
 #include <string>
 #include <iostream>
-#include "stb_image.h"
+#pragma endregion
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
