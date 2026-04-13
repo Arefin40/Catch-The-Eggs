@@ -8,6 +8,12 @@
 #endif
 #pragma endregion
 
+namespace Font
+{
+   constexpr void *SM = GLUT_BITMAP_HELVETICA_12;
+   constexpr void *LG = GLUT_BITMAP_HELVETICA_18;
+}
+
 struct Color
 {
    float r, g, b;
@@ -21,6 +27,12 @@ namespace COLORS
    constexpr Color RED = {0.937f, 0.267f, 0.267f};
    constexpr Color GREEN = {0.133f, 0.773f, 0.369f};
    constexpr Color BLUE = {0.055f, 0.647f, 0.914f};
+
+   namespace TEXT
+   {
+      constexpr Color PRIMARY = {0.95f, 0.95f, 0.95f};
+      constexpr Color MUTED = {0.612f, 0.639f, 0.686f};
+   }
 
    namespace SKY
    {
@@ -46,6 +58,7 @@ namespace Config
    {
       constexpr float LINE_WIDTH = 1.5;
    }
+
    namespace GRASS
    {
       constexpr float TILE_WIDTH = 169;
