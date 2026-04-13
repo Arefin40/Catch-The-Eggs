@@ -51,4 +51,14 @@ public:
 
       glutSwapBuffers();
    }
+
+   void handleKeyDown(unsigned char key, int x, int y) {}
+
+   void handleKeyUp(unsigned char key, int x, int y) {}
+
+   void handleArrowKeyDown(int key, int x, int y) {}
+
+   void handleArrowKeyUp(int key, int x, int y) {}
+
+   void handleMouseMotion(int x, int y) {}
 };
