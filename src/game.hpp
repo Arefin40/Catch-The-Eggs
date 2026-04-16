@@ -48,7 +48,30 @@ public:
 
       Draw::sky();
       Draw::grass(grassTex);
-      Screen::MainMenu(highScore, &menuChickenTex);
+
+      if (state == GameState::PLAYING || state == GameState::PAUSED || state == GameState::GAME_OVER)
+      {
+         // TODO: Render HUD and game elements
+      }
+
+      switch (state)
+      {
+      case GameState::MENU:
+         Screen::MainMenu(highScore, &menuChickenTex);
+         break;
+
+      case GameState::HELP:
+         break;
+
+      case GameState::PAUSED:
+         break;
+
+      case GameState::GAME_OVER:
+         break;
+
+      default:
+         break;
+      }
 
       glutSwapBuffers();
    }
