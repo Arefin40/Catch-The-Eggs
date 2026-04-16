@@ -10,6 +10,10 @@
 
 namespace Screen
 {
+   inline void HUD()
+   {
+      // TODO: Implement Heads-Up Display
+   }
 
    inline void MainMenu(int highScore, const Texture *menuChickenTex)
    {
@@ -24,4 +28,18 @@ namespace Screen
       Text::centered("Use Left / Right Arrows or Mouse to control the basket", 90, COLORS::TEXT::MUTED);
    }
 
+   inline void HelpMenu()
+   {
+      // TODO: Implement help menu screen
+   }
+
+   inline void PauseOverlay()
+   {
+      // TODO: Implement pause overlay
+   }
+
+   inline void GameOverOverlay()
+   {
+      // TODO: Implement game over overlay
+   }
 };

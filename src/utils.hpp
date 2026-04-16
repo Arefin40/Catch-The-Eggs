@@ -28,6 +28,9 @@ namespace COLORS
    constexpr Color GREEN = {0.133f, 0.773f, 0.369f};
    constexpr Color BLUE = {0.055f, 0.647f, 0.914f};
    constexpr Color YELLOW = {0.984f, 0.749f, 0.141f};
+   constexpr Color ORANGE = {0.984f, 0.573f, 0.235f};
+   constexpr Color TEAL = {0.078f, 0.722f, 0.651f};
+   constexpr Color PINK = {0.925f, 0.282f, 0.600f};
 
    namespace TEXT
    {
