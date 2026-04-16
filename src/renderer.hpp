@@ -51,6 +51,13 @@ namespace Draw
       glVertex2f(0, 0);
       glEnd();
    }
+
+   inline void panel(int padding)
+   {
+      int px2 = 2 * padding;
+      rect(padding, padding, W - px2, H - px2, COLORS::Panel::FILL, true);
+      rect(padding, padding, W - px2, H - px2, COLORS::Panel::BORDER, false);
+   }
 }
 
 namespace Text

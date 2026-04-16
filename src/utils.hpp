@@ -27,6 +27,7 @@ namespace COLORS
    constexpr Color RED = {0.937f, 0.267f, 0.267f};
    constexpr Color GREEN = {0.133f, 0.773f, 0.369f};
    constexpr Color BLUE = {0.055f, 0.647f, 0.914f};
+   constexpr Color YELLOW = {0.984f, 0.749f, 0.141f};
 
    namespace TEXT
    {
@@ -38,6 +39,12 @@ namespace COLORS
    {
       constexpr Color TOP = {0.53f, 0.81f, 0.98f};
       constexpr Color BOTTOM = {0.85f, 0.95f, 1.0f};
+   }
+
+   namespace Panel
+   {
+      constexpr Color FILL = {0.067f, 0.094f, 0.153f};
+      constexpr Color BORDER = {0.216f, 0.255f, 0.318f};
    }
 }
 

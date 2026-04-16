@@ -10,7 +10,7 @@
 #include "utils.hpp"
 #include "renderer.hpp"
 #include "texture.hpp"
-
+#include "screens.hpp"
 #pragma endregion
 
 enum class GameState
@@ -48,6 +48,7 @@ public:
 
       Draw::sky();
       Draw::grass(grassTex);
+      Screen::MainMenu(highScore, &menuChickenTex);
 
       glutSwapBuffers();
    }
