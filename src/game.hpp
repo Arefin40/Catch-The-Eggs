@@ -12,11 +12,14 @@
 #include "texture.hpp"
 #include "screens.hpp"
 #include "spawner.hpp"
+#include "basket.hpp"
 #pragma endregion
 
 #pragma region Globals
 #define ENTER_KEY 13
 #define ESC_KEY 27
+#define LEFT -1
+#define RIGHT 1
 #pragma endregion
 
 enum class GameState
@@ -33,15 +36,18 @@ class Game
 private:
    const int GAME_DURATION = Config::Game::DURATION;
    int score, highScore;
+   float timeRemaining;
 
    GameState state;
+   Basket basket;
    Spawner spawner;
 
    Texture menuChickenTex;
    Texture grassTex;
 
 public:
-   Game() : score(0), highScore(0), state(GameState::MENU) {}
+   Game() : score(0), highScore(0), timeRemaining(GAME_DURATION),
+            state(GameState::MENU) {}
 
    void loadAssets()
    {
@@ -51,7 +57,9 @@ public:
 
    void init()
    {
-      // Reset game state and score
+      score = 0;
+      timeRemaining = GAME_DURATION;
+      basket.reset();
    }
 
    void restartGame()
@@ -64,6 +72,10 @@ public:
    {
       if (state != GameState::PLAYING)
          return;
+
+      timeRemaining -= dt;
+
+      basket.update(dt);
    }
 
    void render()
@@ -76,6 +88,7 @@ public:
       if (state == GameState::PLAYING || state == GameState::PAUSED || state == GameState::GAME_OVER)
       {
          spawner.render();
+         basket.render();
          Screen::HUD(score, highScore);
       }
 
@@ -124,6 +137,10 @@ public:
             state = GameState::PAUSED;
          else if (key == ESC_KEY)
             state = GameState::MENU;
+         else if (key == 'a' || key == 'A')
+            basket.setDirection(LEFT);
+         else if (key == 'd' || key == 'D')
+            basket.setDirection(RIGHT);
 
       case GameState::GAME_OVER:
          if (key == 'r' || key == 'R')
@@ -137,35 +154,32 @@ public:
       }
    }
 
-   void handleKeyUp(unsigned char key, int x, int y) {}
+   void handleKeyUp(unsigned char key, int x, int y)
+   {
+      if (state == GameState::PLAYING && (key == 'a' || key == 'A' || key == 'd' || key == 'D'))
+         basket.setDirection(0);
+   }
 
    void handleArrowKeyDown(int key, int x, int y)
    {
       if (state == GameState::PLAYING)
       {
-         // if (key == MOUSE_LEFT)
-         //    move basket left
-         // else if (key == MOUSE_RIGHT)
-         //    move basket right
+         if (key == GLUT_KEY_LEFT)
+            basket.setDirection(LEFT);
+         else if (key == GLUT_KEY_RIGHT)
+            basket.setDirection(RIGHT);
       }
    }
 
    void handleArrowKeyUp(int key, int x, int y)
    {
-      if (state == GameState::PLAYING)
-      {
-         // if (key == MOUSE_LEFT)
-         //    stop move basket left
-         // else if (key == MOUSE_RIGHT)
-         //    stop move basket right
-      }
+      if (state == GameState::PLAYING && (key == GLUT_KEY_LEFT || key == GLUT_KEY_RIGHT))
+         basket.setDirection(0);
    }
 
    void handleMouseMotion(int x, int y)
    {
       if (state == GameState::PLAYING)
-      {
-         // move basket to x position
-      }
+         basket.setCenterX(x);
    }
 };

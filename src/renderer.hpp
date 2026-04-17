@@ -39,6 +39,52 @@ namespace Draw
          rect(x, y - 2, 3, 12, c2, true);
    }
 
+   inline void basket(float x, float y, float w, float h, const Color &color)
+   {
+      float top = y + h * 0.85f, padding = w * 0.05f;
+
+      color.apply();
+      glBegin(GL_QUADS);
+      glVertex2f(x, top);
+      glVertex2f(x + w, top);
+      glVertex2f(x + w * 0.88f, y);
+      glVertex2f(x + w * 0.12f, y);
+      glEnd();
+
+      color.applyf(0.85);
+      glBegin(GL_QUADS);
+      glVertex2f(x - padding, top);
+      glVertex2f(x + w + padding, top);
+      glVertex2f(x + w + padding, y + h);
+      glVertex2f(x - padding, y + h);
+      glEnd();
+
+      color.applyf(0.6);
+      glBegin(GL_LINES);
+      for (int i = 1; i <= 6; ++i)
+      {
+         float t = float(i) / 7.0f;
+         glVertex2f(x + w * (0.12f + 0.76f * t), y);
+         glVertex2f(x + w * t, top);
+      }
+      for (int i = 1; i < 4; ++i)
+      {
+         float t = float(i) / 4.0f;
+         float leftX = x + w * (0.12f * (1.0f - t));
+         float rightX = x + w * (0.88f + 0.12f * t);
+         float currY = top * t;
+         glVertex2f(leftX, currY);
+         glVertex2f(rightX, currY);
+      }
+      glEnd();
+
+      glColor4f(1.0f, 1.0f, 1.0f, 0.3f);
+      glBegin(GL_LINES);
+      glVertex2f(x - padding, y + h * 0.95f);
+      glVertex2f(x + w + padding, y + h * 0.95f);
+      glEnd();
+   }
+
    inline void grass(const Texture &grassTex)
    {
       float h = Config::GRASS::TILE_HEIGHT;

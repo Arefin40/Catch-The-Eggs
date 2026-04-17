@@ -22,6 +22,7 @@ struct Color
    float r, g, b;
    constexpr Color(float r, float g, float b) : r(r), g(g), b(b) {}
    void apply() const { glColor3f(r, g, b); }
+   void applyf(float f) const { glColor3f(r * f, g * f, b * f); }
 };
 
 namespace COLORS
@@ -36,6 +37,7 @@ namespace COLORS
    constexpr Color ORANGE = {0.984f, 0.573f, 0.235f};
    constexpr Color TEAL = {0.078f, 0.722f, 0.651f};
    constexpr Color PINK = {0.925f, 0.282f, 0.600f};
+   constexpr Color BROWN = {0.58f, 0.38f, 0.22f};
 
    namespace TEXT
    {
@@ -59,6 +61,8 @@ namespace COLORS
 
 namespace Config
 {
+   constexpr bool SHOW_BOUNDING_BOX = true;
+
    namespace Window
    {
       constexpr int WIDTH = 800;
@@ -85,6 +89,13 @@ namespace Config
    {
       constexpr float A = 500;
       constexpr float B = 380;
+   }
+
+   namespace BASKET
+   {
+      constexpr float WIDTH = 110;
+      constexpr float HEIGHT = 60;
+      constexpr float ENLARGED_WIDTH = 70;
    }
 
 }
