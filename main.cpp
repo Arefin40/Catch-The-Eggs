@@ -9,14 +9,32 @@
 #pragma endregion
 
 static Game game;
+static int lastTime = 0;
 
 void setup()
 {
+   glEnable(GL_MULTISAMPLE);
+   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
    glEnable(GL_BLEND);
    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
    glEnable(GL_LINE_SMOOTH);
    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
    glLineWidth(Config::UI::LINE_WIDTH);
+}
+
+void timerCallback(int value)
+{
+   int currTime = glutGet(GLUT_ELAPSED_TIME);
+   float dt = float(currTime - lastTime) / 1000.0f;
+   lastTime = currTime;
+
+   if (dt > 0.1f)
+      dt = 0.1f;
+
+   game.update(dt);
+   glutPostRedisplay();
+   glutTimerFunc(16, timerCallback, 0);
 }
 
 void display()
@@ -59,9 +77,7 @@ int main(int argc, char **argv)
 
    setup();
    game.loadAssets();
-
-   glEnable(GL_MULTISAMPLE);
-   glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+   game.init();
 
    glutDisplayFunc(display);
    glutReshapeFunc(reshape);
@@ -70,6 +86,9 @@ int main(int argc, char **argv)
    glutSpecialFunc(arrowKeyDownCallback);
    glutSpecialUpFunc(arrowKeyUpCallback);
    glutPassiveMotionFunc(mouseMotionCallback);
+
+   lastTime = glutGet(GLUT_ELAPSED_TIME);
+   glutTimerFunc(16, timerCallback, 0);
 
    glutMainLoop();
 

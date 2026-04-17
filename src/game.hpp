@@ -58,6 +58,14 @@ public:
       state = GameState::PLAYING;
    }
 
+   void update(float dt)
+   {
+      if (state != GameState::PLAYING)
+         return;
+
+      std::cout << "Updating game with dt: " << dt << " seconds" << std::endl;
+   }
+
    void render()
    {
       glClear(GL_COLOR_BUFFER_BIT);
@@ -126,7 +134,6 @@ public:
       default:
          break;
       }
-      glutPostRedisplay();
    }
 
    void handleKeyUp(unsigned char key, int x, int y) {}
