@@ -11,6 +11,7 @@
 #include "renderer.hpp"
 #include "texture.hpp"
 #include "screens.hpp"
+#include "spawner.hpp"
 #pragma endregion
 
 #pragma region Globals
@@ -34,6 +35,7 @@ private:
    int score, highScore;
 
    GameState state;
+   Spawner spawner;
 
    Texture menuChickenTex;
    Texture grassTex;
@@ -62,8 +64,6 @@ public:
    {
       if (state != GameState::PLAYING)
          return;
-
-      std::cout << "Updating game with dt: " << dt << " seconds" << std::endl;
    }
 
    void render()
@@ -75,7 +75,8 @@ public:
 
       if (state == GameState::PLAYING || state == GameState::PAUSED || state == GameState::GAME_OVER)
       {
-         // TODO: Render HUD and game elements
+         spawner.render();
+         Screen::HUD(score, highScore);
       }
 
       switch (state)

@@ -6,6 +6,9 @@
 #else
 #include <GL/glut.h>
 #endif
+#include <string>
+#include <sstream>
+#include <iomanip>
 #pragma endregion
 
 namespace Font
@@ -17,6 +20,7 @@ namespace Font
 struct Color
 {
    float r, g, b;
+   constexpr Color(float r, float g, float b) : r(r), g(g), b(b) {}
    void apply() const { glColor3f(r, g, b); }
 };
 
@@ -27,6 +31,7 @@ namespace COLORS
    constexpr Color RED = {0.937f, 0.267f, 0.267f};
    constexpr Color GREEN = {0.133f, 0.773f, 0.369f};
    constexpr Color BLUE = {0.055f, 0.647f, 0.914f};
+   constexpr Color DARKBLUE = {0.0118f, 0.4118f, 0.6314f};
    constexpr Color YELLOW = {0.984f, 0.749f, 0.141f};
    constexpr Color ORANGE = {0.984f, 0.573f, 0.235f};
    constexpr Color TEAL = {0.078f, 0.722f, 0.651f};
@@ -36,6 +41,7 @@ namespace COLORS
    {
       constexpr Color PRIMARY = {0.95f, 0.95f, 0.95f};
       constexpr Color MUTED = {0.612f, 0.639f, 0.686f};
+      constexpr Color HUD = WHITE;
    }
 
    namespace SKY
@@ -75,4 +81,26 @@ namespace Config
       constexpr float TILE_HEIGHT = 41;
    }
 
+   namespace STICK
+   {
+      constexpr float A = 500;
+      constexpr float B = 380;
+   }
+
+}
+
+namespace Utils
+{
+   inline std::string formatTime(double seconds)
+   {
+      int mins = static_cast<int>(seconds) / 60;
+      int secs = static_cast<int>(seconds) % 60;
+
+      std::stringstream ss;
+      ss << std::setfill('0')
+         << std::setw(2) << mins << ":"
+         << std::setw(2) << secs;
+
+      return ss.str();
+   }
 }

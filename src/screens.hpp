@@ -10,9 +10,21 @@
 
 namespace Screen
 {
-   inline void HUD()
+   inline void HUD(int score = 0, int highScore = 0, float timeRemaining = 9.999)
    {
-      // TODO: Implement Heads-Up Display
+      float offsetX = 25, offsetY = H - 30;
+      bool blinkTime = (static_cast<int>(timeRemaining * 1000.0) / 500) % 2 == 0;
+
+      std::string scoreStr = "SCORE: " + std::to_string(score);
+      Text::draw(scoreStr, offsetX, offsetY, COLORS::TEXT::HUD, Font::LG);
+
+      std::string highScoreStr = "HIGH SCORE: " + std::to_string(highScore);
+      Text::centered(highScoreStr, offsetY, COLORS::TEXT::HUD, Font::LG);
+
+      std::string timeStr = "TIME: " + Utils::formatTime(timeRemaining);
+      float timeStrWidth = Text::width(timeStr, Font::LG);
+      Color timeColor = (timeRemaining <= 10 && blinkTime) ? COLORS::RED : COLORS::TEXT::HUD;
+      Text::draw(timeStr, W - timeStrWidth - offsetX, offsetY, timeColor, Font::LG);
    }
 
    inline void MainMenu(int highScore, const Texture *menuChickenTex)

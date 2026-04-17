@@ -26,6 +26,19 @@ namespace Draw
       glEnd();
    }
 
+   inline void stick(float y, int segment_start = 40)
+   {
+      float r = 0.44f, g = 0.5f, b = 0.16f;
+      Color c1 = {r, g, b};
+      Color c2 = {r * 0.6f, g * 0.6f, b * 0.6f};
+
+      rect(0, y, W, 8, c1, true);
+      rect(0, y, W, 8, c2, false);
+
+      for (int x = segment_start; x < W; x += 80)
+         rect(x, y - 2, 3, 12, c2, true);
+   }
+
    inline void grass(const Texture &grassTex)
    {
       float h = Config::GRASS::TILE_HEIGHT;
