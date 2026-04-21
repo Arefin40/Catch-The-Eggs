@@ -63,6 +63,7 @@ public:
    {
       score = 0;
       timeRemaining = GAME_DURATION;
+      Draw::init();
       basket.reset();
       spawner.init(&normalChickenTex, &evilChickenTex);
    }

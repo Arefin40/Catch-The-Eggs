@@ -6,6 +6,8 @@
 #else
 #include <GL/glut.h>
 #endif
+#include <cmath>
+#include <vector>
 #include "utils.hpp"
 #include "texture.hpp"
 #pragma endregion
@@ -13,8 +15,32 @@
 #define W float(Config::Window::WIDTH)
 #define H float(Config::Window::HEIGHT)
 
+class CircleCache
+{
+public:
+   std::vector<std::pair<float, float>> unitCircle;
+
+   CircleCache(int segments = 32)
+   {
+      unitCircle.reserve(segments);
+
+      for (int i = 0; i < segments; ++i)
+      {
+         float theta = 2 * 3.1415926f * i / segments;
+         unitCircle.emplace_back(std::cos(theta), std::sin(theta));
+      }
+   }
+};
+
 namespace Draw
 {
+   inline CircleCache *circleCache = nullptr;
+
+   inline void init()
+   {
+      circleCache = new CircleCache(32);
+   }
+
    inline void rect(int x, int y, float width, float height, const Color &color, bool filled = true)
    {
       color.apply();
@@ -29,12 +55,12 @@ namespace Draw
    inline void ellipse(float cx, float cy, float rx, float ry, const Color &color, bool filled = true)
    {
       color.apply();
+      const auto &pts = circleCache->unitCircle;
+      int n = pts.size();
+
       glBegin(filled ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
-      for (int i = 0; i < 32; i++)
-      {
-         float theta = 2 * 3.1415926f * i / 32;
-         glVertex2f(cx + std::cos(theta) * rx, cy + std::sin(theta) * ry);
-      }
+      for (int i = 0; i < n; i++)
+         glVertex2f(cx + pts[i].first * rx, cy + pts[i].second * ry);
       glEnd();
    }
 
