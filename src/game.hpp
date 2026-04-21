@@ -44,6 +44,8 @@ private:
 
    Texture menuChickenTex;
    Texture grassTex;
+   Texture normalChickenTex;
+   Texture evilChickenTex;
 
 public:
    Game() : score(0), highScore(0), timeRemaining(GAME_DURATION),
@@ -53,6 +55,8 @@ public:
    {
       menuChickenTex.load("assets/textures/menu-chicken.png");
       grassTex.load("assets/textures/grass.png", true);
+      normalChickenTex.load("assets/textures/red-chicken.png");
+      evilChickenTex.load("assets/textures/black-chicken.png");
    }
 
    void init()
@@ -60,6 +64,7 @@ public:
       score = 0;
       timeRemaining = GAME_DURATION;
       basket.reset();
+      spawner.init(&normalChickenTex, &evilChickenTex);
    }
 
    void restartGame()
@@ -76,6 +81,7 @@ public:
       timeRemaining -= dt;
 
       basket.update(dt);
+      spawner.update(dt);
    }
 
    void render()

@@ -87,7 +87,7 @@ namespace Config
 
    namespace STICK
    {
-      constexpr float A = 500;
+      constexpr float A = 480;
       constexpr float B = 380;
    }
 
@@ -96,6 +96,14 @@ namespace Config
       constexpr float WIDTH = 110;
       constexpr float HEIGHT = 60;
       constexpr float ENLARGED_WIDTH = 70;
+   }
+
+   namespace CHICKEN
+   {
+      constexpr float MOVEMENT_PADDING = 50;
+      constexpr float TEX_SIZE = 70;
+      constexpr float NORMAL_SPEED = 140;
+      constexpr float EVIL_SPEED = 90;
    }
 
 }

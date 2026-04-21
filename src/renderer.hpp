@@ -26,6 +26,23 @@ namespace Draw
       glEnd();
    }
 
+   inline void ellipse(float cx, float cy, float rx, float ry, const Color &color, bool filled = true)
+   {
+      color.apply();
+      glBegin(filled ? GL_TRIANGLE_FAN : GL_LINE_LOOP);
+      for (int i = 0; i < 32; i++)
+      {
+         float theta = 2 * 3.1415926f * i / 32;
+         glVertex2f(cx + std::cos(theta) * rx, cy + std::sin(theta) * ry);
+      }
+      glEnd();
+   }
+
+   inline void circle(float cx, float cy, float radius, const Color &color, bool filled = true)
+   {
+      ellipse(cx, cy, radius, radius, color, filled);
+   }
+
    inline void stick(float y, int segment_start = 40)
    {
       float r = 0.44f, g = 0.5f, b = 0.16f;
@@ -37,6 +54,69 @@ namespace Draw
 
       for (int x = segment_start; x < W; x += 80)
          rect(x, y - 2, 3, 12, c2, true);
+   }
+
+   inline void chicken(float x, float y, float size)
+   {
+      const Color body = {0.937f, 0.878f, 0.757f};
+      const Color wing = {0.855f, 0.761f, 0.600f};
+      const Color feather = {0.922f, 0.859f, 0.725f};
+
+      const float cx = x + size * 0.5f;
+      const float cy = y + size * 0.5f - 9.0f;
+
+      // Beak
+      COLORS::YELLOW.apply();
+      glBegin(GL_TRIANGLES);
+      glVertex2f(cx - 33, cy + 18);
+      glVertex2f(cx - 27, cy + 14);
+      glVertex2f(cx - 27, cy + 20);
+      glEnd();
+
+      // Tail feathers
+      feather.apply();
+
+      const float tail[][6] = {
+          {15, -1, 30, -6, 23, -13},
+          {15, 1, 31, 7, 31, -4},
+          {15, 3, 29, 8, 22, 14}};
+
+      glBegin(GL_TRIANGLES);
+      for (const auto &t : tail)
+      {
+         glVertex2f(cx + t[0], cy + t[1]);
+         glVertex2f(cx + t[2], cy + t[3]);
+         glVertex2f(cx + t[4], cy + t[5]);
+      }
+      glEnd();
+
+      // Comb
+      Draw::circle(cx - 19.5f, cy + 30.5f, 4.5f, COLORS::RED, true);
+      Draw::circle(cx - 13.0f, cy + 29.0f, 4.0f, COLORS::RED, true);
+      Draw::circle(cx - 8.0f, cy + 27.0f, 3.0f, COLORS::RED, true);
+
+      // Body
+      Draw::circle(cx - 17, cy + 17, 11, body, true);
+      Draw::circle(cx, cy + 4, 18, body, true);
+      Draw::ellipse(cx, cy + 4, 12, 7.5, wing, true);
+      Draw::circle(cx - 21, cy + 21, 1.5, COLORS::BLACK, true);
+
+      // Legs
+      Draw::rect(cx - 7, cy - 22, 3, 10, COLORS::ORANGE, true);
+      Draw::rect(cx + 4, cy - 22, 3, 10, COLORS::ORANGE, true);
+
+      COLORS::ORANGE.apply();
+      glBegin(GL_TRIANGLES);
+
+      glVertex2f(cx - 5, cy - 21);
+      glVertex2f(cx - 2, cy - 26);
+      glVertex2f(cx - 10, cy - 26);
+
+      glVertex2f(cx + 6, cy - 21);
+      glVertex2f(cx + 1, cy - 26);
+      glVertex2f(cx + 9, cy - 26);
+
+      glEnd();
    }
 
    inline void basket(float x, float y, float w, float h, const Color &color)
