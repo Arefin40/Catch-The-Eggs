@@ -145,6 +145,34 @@ namespace Draw
       glEnd();
    }
 
+   inline void egg(float cx, float cy, float rx, float ry, const Color &color)
+   {
+      color.apply();
+      ellipse(cx, cy, rx, ry, color, true);
+      circle(cx - rx * 0.25f, cy + ry * 0.4f, rx * 0.35f, color.luma(1.25), true);
+   }
+
+   inline void bomb(float cx, float cy, float rx, float ry, const Color &color)
+   {
+      egg(cx, cy, rx, ry, color);
+
+      circle(cx - 3, cy + 2, 1.5, COLORS::RED, true);
+      circle(cx + 3, cy + 2, 1.5, COLORS::RED, true);
+
+      COLORS::RED.apply();
+      glBegin(GL_LINE_STRIP);
+      glVertex2f(cx - 3, cy - 2);
+      glVertex2f(cx + 3, cy - 2);
+      glEnd();
+   }
+
+   inline void poop(float cx, float cy)
+   {
+      ellipse(cx, cy + 8, 8, 6, COLORS::BROWN, true);
+      ellipse(cx, cy, 11, 6, COLORS::BROWN, true);
+      ellipse(cx, cy - 8, 13, 6, COLORS::BROWN, true);
+   }
+
    inline void basket(float x, float y, float w, float h, const Color &color)
    {
       float top = y + h * 0.85f, padding = w * 0.05f;

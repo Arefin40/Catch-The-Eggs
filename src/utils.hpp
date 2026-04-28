@@ -21,8 +21,13 @@ struct Color
 {
    float r, g, b;
    constexpr Color(float r, float g, float b) : r(r), g(g), b(b) {}
+
+   constexpr Color luma(float f) const { return {r * f, g * f, b * f}; }
+   constexpr Color lighter() const { return luma(1.3f); }
+   constexpr Color darker() const { return luma(0.7f); }
+
    void apply() const { glColor3f(r, g, b); }
-   void applyf(float f) const { glColor3f(r * f, g * f, b * f); }
+   void applyf(float f) const { luma(f).apply(); }
 };
 
 namespace COLORS
@@ -104,6 +109,12 @@ namespace Config
       constexpr float TEX_SIZE = 70;
       constexpr float NORMAL_SPEED = 140;
       constexpr float EVIL_SPEED = 90;
+   }
+
+   namespace EGG
+   {
+      constexpr float WIDTH = 26;
+      constexpr float HEIGHT = 34;
    }
 
 }
