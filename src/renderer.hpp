@@ -41,6 +41,17 @@ namespace Draw
       circleCache = new CircleCache(32);
    }
 
+   inline void line(float x1, float y1, float x2, float y2, const Color &color, float thickness = 1.0f)
+   {
+      color.apply();
+      glLineWidth(thickness);
+      glBegin(GL_LINES);
+      glVertex2f(x1, y1);
+      glVertex2f(x2, y2);
+      glEnd();
+      glLineWidth(1.0f);
+   }
+
    inline void rect(int x, int y, float width, float height, const Color &color, bool filled = true)
    {
       color.apply();

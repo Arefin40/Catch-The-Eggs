@@ -117,6 +117,11 @@ namespace Config
       constexpr float HEIGHT = 34;
    }
 
+   namespace PERK
+   {
+      constexpr float SIZE = 32;
+   }
+
 }
 
 namespace Utils
