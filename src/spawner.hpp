@@ -6,10 +6,12 @@
 #include "chicken.hpp"
 #pragma endregion
 
+#pragma region Constants
 #define STICK1_Y Config::STICK::A
 #define STICK2_Y Config::STICK::B
 #define CHICKEN_SIZE Config::CHICKEN::TEX_SIZE
 #define W float(Config::Window::WIDTH)
+#pragma endregion
 
 class Spawner
 {
@@ -46,10 +48,11 @@ public:
       }
    }
 
-   void update(float dt)
+   void update(float dt, float wind)
    {
       if (normalChicken)
          normalChicken->update(dt);
+
       if (evilChicken)
          evilChicken->update(dt);
    }

@@ -31,7 +31,7 @@ public:
        : x(x), y(y), width(width), height(height), active(true) {}
 
    virtual ~Entity() = default;
-   virtual void update(float dt) = 0;
+   virtual void update(float dt, float wind) = 0;
    virtual void render() = 0;
 
    float getX() const { return x; }

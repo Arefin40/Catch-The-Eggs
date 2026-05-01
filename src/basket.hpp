@@ -57,7 +57,7 @@ public:
       x += BEW / 2;
    }
 
-   void update(float dt) override
+   void update(float dt, float wind) override
    {
 
       if (direction == -1)

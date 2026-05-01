@@ -8,8 +8,6 @@
 #include "utils.hpp"
 #include "renderer.hpp"
 
-using namespace std;
-
 class Chicken
 {
 private:

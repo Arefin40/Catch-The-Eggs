@@ -1,6 +1,7 @@
 #pragma once
 
 #pragma region Includes
+#include <algorithm>
 #include <unordered_map>
 #include "entity.hpp"
 #pragma endregion
@@ -32,8 +33,9 @@ public:
    float getSpeed() const { return speed; }
    void setSpeed(float newSpeed) { speed = newSpeed; }
 
-   void update(float dt) override
+   void update(float dt, float wind) override
    {
+      x = std::clamp(x + wind * dt, 50.0f, float(Config::Window::WIDTH) - width - 50);
       y -= speed * dt;
    }
 

@@ -9,6 +9,7 @@
 #include <string>
 #include <sstream>
 #include <iomanip>
+#include <random>
 #pragma endregion
 
 namespace Font
@@ -79,6 +80,14 @@ namespace Config
       constexpr int DURATION = 120;
    }
 
+   namespace Wind
+   {
+      constexpr float INTERVAL = 30;
+      constexpr float DURATION = 10;
+      constexpr float MAX_STRENGTH = 70;
+      constexpr float RAMP_SPEED = 15;
+   }
+
    namespace UI
    {
       constexpr float LINE_WIDTH = 1.5;
@@ -126,6 +135,22 @@ namespace Config
 
 namespace Utils
 {
+   inline int randomInt(int min, int max)
+   {
+      static std::random_device rd;
+      static std::mt19937 gen(rd());
+      std::uniform_int_distribution<int> dis(min, max);
+      return dis(gen);
+   }
+
+   inline float randomFloat(float min, float max)
+   {
+      static std::random_device rd;
+      static std::mt19937 gen(rd());
+      std::uniform_real_distribution<float> dis(min, max);
+      return dis(gen);
+   }
+
    inline std::string formatTime(double seconds)
    {
       int mins = static_cast<int>(seconds) / 60;

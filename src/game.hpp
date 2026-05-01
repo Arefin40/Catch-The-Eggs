@@ -20,6 +20,19 @@
 #define ESC_KEY 27
 #define LEFT -1
 #define RIGHT 1
+
+struct Airflow
+{
+   float strength = 0;
+   bool wasActive = false;
+
+   static bool isWindActive(float timeRemaining)
+   {
+      return fmod(timeRemaining, Config::Wind::INTERVAL) < Config::Wind::DURATION;
+   }
+};
+
+Airflow airflow;
 #pragma endregion
 
 enum class GameState
@@ -74,15 +87,29 @@ public:
       state = GameState::PLAYING;
    }
 
+   void updateAirflow(float dt)
+   {
+      bool active = Airflow::isWindActive(timeRemaining);
+      static float dir = 1;
+
+      if (active && !airflow.wasActive)
+         dir = (rand() % 2 == 0) ? 1 : -1;
+
+      float target = active ? dir * Config::Wind::MAX_STRENGTH : 0;
+      airflow.strength += (target - airflow.strength) * Config::Wind::RAMP_SPEED * dt;
+      airflow.wasActive = active;
+   }
+
    void update(float dt)
    {
       if (state != GameState::PLAYING)
          return;
 
       timeRemaining -= dt;
+      updateAirflow(dt);
 
-      basket.update(dt);
-      spawner.update(dt);
+      basket.update(dt, airflow.strength);
+      spawner.update(dt, airflow.strength);
    }
 
    void render()
