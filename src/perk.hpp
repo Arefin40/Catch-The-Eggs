@@ -19,6 +19,17 @@ inline const std::unordered_map<PerkType, Color> PerkColor = {
     {PerkType::TIME_EXTENSION, COLORS::BLUE},
 };
 
+PerkType randomPerk()
+{
+   int r = Utils::randomInt(1, 30);
+   if (r <= 20)
+      return PerkType::TIME_EXTENSION;
+   else if (r <= 10)
+      return PerkType::SLOW_FALL;
+   else
+      return PerkType::BASKET_ENLARGE;
+}
+
 class Perk : public Entity
 {
 private:
@@ -43,7 +54,7 @@ public:
    {
       float ribbonSize = 6, size = width;
       float cx = x + size / 2, cy = y + size / 2;
-      auto color = PerkColor.at(PerkType::BASKET_ENLARGE);
+      auto color = PerkColor.at(type);
 
       Draw::rect(x, y, size, size, color.darker(), true);
       Draw::rect(x, y, size, size, color, false);

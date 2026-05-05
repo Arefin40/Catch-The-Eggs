@@ -25,6 +25,19 @@ inline const std::unordered_map<EggType, Color> EggColor = {
     {EggType::GOLDEN, COLORS::YELLOW},
 };
 
+static EggType randomEgg()
+{
+   int r = Utils::randomInt(1, 100);
+   if (r <= 60)
+      return EggType::STANDARD;
+   else if (r <= 80)
+      return EggType::BLUE;
+   else if (r <= 90)
+      return EggType::GOLDEN;
+   else
+      return EggType::POOP;
+}
+
 class Egg : public Entity
 {
 private:
