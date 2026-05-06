@@ -10,7 +10,7 @@
 
 namespace Screen
 {
-   inline void HUD(int score = 0, int highScore = 0, float timeRemaining = 9.999)
+   inline void HUD(int score, int highScore, float timeRemaining)
    {
       float offsetX = 25, offsetY = H - 30;
       bool blinkTime = (static_cast<int>(timeRemaining * 1000.0) / 500) % 2 == 0;

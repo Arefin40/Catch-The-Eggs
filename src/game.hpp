@@ -7,12 +7,14 @@
 #include <GL/glut.h>
 #endif
 
+#include <fstream>
 #include "utils.hpp"
 #include "renderer.hpp"
 #include "texture.hpp"
 #include "screens.hpp"
 #include "spawner.hpp"
 #include "basket.hpp"
+#include "collision.hpp"
 #pragma endregion
 
 #pragma region Globals
@@ -72,6 +74,18 @@ public:
       evilChickenTex.load("assets/textures/black-chicken.png");
    }
 
+   void loadHighScore()
+   {
+      std::ifstream file("highscore.txt");
+      if (file.is_open())
+      {
+         file >> highScore;
+         file.close();
+      }
+      else
+         highScore = 0;
+   }
+
    void init()
    {
       score = 0;
@@ -79,12 +93,39 @@ public:
       Draw::init();
       basket.reset();
       spawner.init(&normalChickenTex, &evilChickenTex);
+      loadHighScore();
    }
 
    void restartGame()
    {
       init();
       state = GameState::PLAYING;
+   }
+
+   void endGame(bool byBomb)
+   {
+      state = GameState::GAME_OVER;
+   }
+
+   void saveHighScore()
+   {
+      std::ofstream file("highscore.txt");
+      if (file.is_open())
+      {
+         file << highScore;
+         file.close();
+      }
+   }
+
+   void updateScore(int delta)
+   {
+      score = std::max(0, score + delta);
+
+      if (score > highScore)
+      {
+         highScore = score;
+         saveHighScore();
+      }
    }
 
    void updateAirflow(float dt)
@@ -100,6 +141,27 @@ public:
       airflow.wasActive = active;
    }
 
+   void handleEggCatch()
+   {
+      const auto &eggs = spawner.getEggs();
+      for (size_t i = 0; i < eggs.size(); ++i)
+      {
+         Egg egg = eggs[i];
+         if (Collision::checkCatch(egg, basket))
+         {
+            if (egg.getType() == EggType::BOMB)
+            {
+               endGame(true);
+               return;
+            }
+
+            updateScore(egg.getScore());
+            spawner.deleteEgg(i);
+            break;
+         }
+      }
+   }
+
    void update(float dt)
    {
       if (state != GameState::PLAYING)
@@ -108,8 +170,16 @@ public:
       timeRemaining -= dt;
       updateAirflow(dt);
 
+      if (timeRemaining <= 0)
+      {
+         timeRemaining = 0;
+         endGame(false);
+         return;
+      }
+
       basket.update(dt, airflow.strength);
       spawner.update(dt, airflow.strength);
+      handleEggCatch();
    }
 
    void render()
@@ -123,7 +193,7 @@ public:
       {
          spawner.render();
          basket.render();
-         Screen::HUD(score, highScore);
+         Screen::HUD(score, highScore, timeRemaining);
       }
 
       switch (state)
