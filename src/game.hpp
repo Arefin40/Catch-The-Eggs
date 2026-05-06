@@ -51,7 +51,11 @@ class Game
 private:
    const int GAME_DURATION = Config::Game::DURATION;
    int score, highScore;
+
    float timeRemaining;
+   float wideBasketTimer = 0;
+   float slowFallTimer = 0;
+   float timeExtensionTimer = 0;
 
    GameState state;
    Basket basket;
@@ -89,6 +93,9 @@ public:
    void init()
    {
       score = 0;
+      wideBasketTimer = 0;
+      slowFallTimer = 0;
+      timeExtensionTimer = 0;
       timeRemaining = GAME_DURATION;
       Draw::init();
       basket.reset();
@@ -162,6 +169,37 @@ public:
       }
    }
 
+   void handlePerkCatch()
+   {
+      const auto &perks = spawner.getPerks();
+      for (size_t i = 0; i < perks.size(); ++i)
+      {
+         Perk perk = perks[i];
+         if (Collision::checkCatch(perk, basket))
+         {
+            switch (perk.getType())
+            {
+            case PerkType::BASKET_ENLARGE:
+               wideBasketTimer = Config::PERK::WIDE_BASKET_DURATION;
+               basket.enlarge();
+               break;
+
+            case PerkType::SLOW_FALL:
+               slowFallTimer = Config::PERK::SLOW_FALL_DURATION;
+               break;
+
+            case PerkType::TIME_EXTENSION:
+               timeRemaining += Config::PERK::TIME_EXTENSION;
+               timeExtensionTimer = Config::PERK::TIME_EXTENSION;
+               break;
+            }
+
+            spawner.deletePerk(i);
+            break;
+         }
+      }
+   }
+
    void update(float dt)
    {
       if (state != GameState::PLAYING)
@@ -177,9 +215,34 @@ public:
          return;
       }
 
+      if (wideBasketTimer > 0)
+      {
+         wideBasketTimer -= dt;
+         if (wideBasketTimer <= 0)
+         {
+            wideBasketTimer = 0;
+            basket.resetSize();
+         }
+      }
+
+      if (slowFallTimer > 0)
+      {
+         slowFallTimer -= dt;
+         if (slowFallTimer <= 0)
+            slowFallTimer = 0;
+      }
+
+      if (timeExtensionTimer > 0)
+      {
+         timeExtensionTimer -= dt;
+         if (timeExtensionTimer <= 0)
+            timeExtensionTimer = 0;
+      }
+
       basket.update(dt, airflow.strength);
       spawner.update(dt, airflow.strength);
       handleEggCatch();
+      handlePerkCatch();
    }
 
    void render()
@@ -193,7 +256,7 @@ public:
       {
          spawner.render();
          basket.render();
-         Screen::HUD(score, highScore, timeRemaining);
+         Screen::HUD(score, highScore, timeRemaining, wideBasketTimer, slowFallTimer, timeExtensionTimer);
       }
 
       switch (state)

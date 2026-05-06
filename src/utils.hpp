@@ -38,18 +38,15 @@ namespace COLORS
    constexpr Color RED = {0.937f, 0.267f, 0.267f};
    constexpr Color GREEN = {0.133f, 0.773f, 0.369f};
    constexpr Color BLUE = {0.055f, 0.647f, 0.914f};
-   constexpr Color DARKBLUE = {0.0118f, 0.4118f, 0.6314f};
    constexpr Color YELLOW = {0.984f, 0.749f, 0.141f};
    constexpr Color ORANGE = {0.984f, 0.573f, 0.235f};
-   constexpr Color TEAL = {0.078f, 0.722f, 0.651f};
-   constexpr Color PINK = {0.925f, 0.282f, 0.600f};
    constexpr Color BROWN = {0.58f, 0.38f, 0.22f};
 
    namespace TEXT
    {
       constexpr Color PRIMARY = {0.95f, 0.95f, 0.95f};
       constexpr Color MUTED = {0.612f, 0.639f, 0.686f};
-      constexpr Color HUD = WHITE;
+      constexpr Color HUD = BLUE.darker();
    }
 
    namespace SKY
@@ -129,6 +126,9 @@ namespace Config
    namespace PERK
    {
       constexpr float SIZE = 32;
+      constexpr float WIDE_BASKET_DURATION = 10;
+      constexpr float SLOW_FALL_DURATION = 5;
+      constexpr float TIME_EXTENSION = 5;
    }
 
 }

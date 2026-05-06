@@ -10,7 +10,8 @@
 
 namespace Screen
 {
-   inline void HUD(int score, int highScore, float timeRemaining)
+   inline void HUD(int score, int highScore, float timeRemaining,
+                   float wideBasketTimer, float slowFallTimer, float timeExtensionTimer)
    {
       float offsetX = 25, offsetY = H - 30;
       bool blinkTime = (static_cast<int>(timeRemaining * 1000.0) / 500) % 2 == 0;
@@ -25,6 +26,30 @@ namespace Screen
       float timeStrWidth = Text::width(timeStr, Font::LG);
       Color timeColor = (timeRemaining <= 10 && blinkTime) ? COLORS::RED : COLORS::TEXT::HUD;
       Text::draw(timeStr, W - timeStrWidth - offsetX, offsetY, timeColor, Font::LG);
+
+      offsetY -= 30;
+
+      if (timeExtensionTimer > 0)
+      {
+         std::string str = "[+] TIME EXTENSION: " + std::to_string(Config::PERK::TIME_EXTENSION);
+         float strWidth = Text::width(str);
+         Text::draw(str, W - strWidth - offsetX, offsetY, COLORS::BLUE.luma(0.75));
+      }
+
+      if (wideBasketTimer > 0)
+      {
+         char buf[64];
+         std::snprintf(buf, sizeof(buf), "[+] WIDE BASKET: %.1f s", wideBasketTimer);
+         Text::draw(std::string(buf), offsetX, offsetY, COLORS::GREEN.luma(0.75));
+         offsetY -= 20;
+      }
+
+      if (slowFallTimer > 0)
+      {
+         char buf[64];
+         std::snprintf(buf, sizeof(buf), "[-v] SLOW EGGS: %.1f s", slowFallTimer);
+         Text::draw(std::string(buf), offsetX, offsetY, COLORS::YELLOW.luma(0.75));
+      }
    }
 
    inline void MainMenu(int highScore, const Texture *menuChickenTex)
