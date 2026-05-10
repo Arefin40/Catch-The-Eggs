@@ -122,30 +122,47 @@ public:
       eggSpawnTimer = bombSpawnTimer = perkSpawnTimer = 0;
    }
 
-   void update(float dt, float wind)
+   void update(float dt, float wind, float timeElapsed, bool slowFallActive)
    {
       if (normalChicken)
          normalChicken->update(dt);
       if (evilChicken)
          evilChicken->update(dt);
 
-      tickSpawn(eggSpawnTimer, BASE_EGG_SPAWN_INTERVAL, dt, [&]
+      float difficultyFactor = std::min(1.0f, timeElapsed / Config::Game::DURATION);
+      float fallSpeed = BASE_FALL_SPEED + (MAX_FALL_SPEED - BASE_FALL_SPEED) * difficultyFactor;
+
+      if (slowFallActive)
+         fallSpeed *= SLOW_FALL_FACTOR;
+
+      float spawnDifficultyFactor = EGG_SPAWN_DIFFICULTY_FACTOR * difficultyFactor;
+      float spawnInterval = std::max(MIN_EGG_SPAWN_INTERVAL, BASE_EGG_SPAWN_INTERVAL - spawnDifficultyFactor);
+
+      tickSpawn(eggSpawnTimer, spawnInterval, dt, [&]
                 {
          float spawnX = normalChicken->getX() + normalChicken->getSize() / 2 - (Config::EGG::WIDTH / 2);
          float spawnY = normalChicken->getY() - 10;
-         eggs.emplace_back(spawnX, spawnY, selectRandom(e1, e2, randomEgg), BASE_FALL_SPEED); });
+         EggType eggType = selectRandom(e1, e2, randomEgg);
+
+         float speed_factor = 1;
+         if (eggType == EggType::GOLDEN)
+            speed_factor = 1.2;
+         else if (eggType == EggType::POOP)
+            speed_factor = 0.85;
+
+         eggs.emplace_back(spawnX, spawnY, eggType, fallSpeed * speed_factor); });
 
       tickSpawn(bombSpawnTimer, BOMB_SPAWN_INTERVAL, dt, [&]
                 {
          float spawnX = evilChicken->getX() + evilChicken->getSize() / 2 - (Config::EGG::WIDTH / 2);
          float spawnY = evilChicken->getY() - 10;
-         eggs.emplace_back(spawnX, spawnY, EggType::BOMB, BASE_FALL_SPEED); });
+         eggs.emplace_back(spawnX, spawnY, EggType::BOMB, fallSpeed); });
 
       tickSpawn(perkSpawnTimer, PERK_SPAWN_INTERVAL, dt, [&]
                 {
          float spawnX = Utils::randomFloat(50, W - 50 - Config::PERK::SIZE);
          float spawnY = float(Config::Window::HEIGHT) + Config::PERK::SIZE;
-         perks.emplace_back(spawnX, spawnY, selectRandom(p1, p2, randomPerk), BASE_FALL_SPEED * SLOW_FALL_FACTOR); });
+         perks.emplace_back(spawnX, spawnY, selectRandom(p1, p2, randomPerk), fallSpeed * 0.65); });
 
       updateEntities(eggs, dt, wind);
       updateEntities(perks, dt, wind);

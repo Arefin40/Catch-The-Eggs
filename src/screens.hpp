@@ -31,7 +31,7 @@ namespace Screen
 
       if (timeExtensionTimer > 0)
       {
-         std::string str = "[+] TIME EXTENSION: " + std::to_string(Config::PERK::TIME_EXTENSION);
+         std::string str = "[+] TIME EXTENSION: " + std::to_string(int(Config::PERK::TIME_EXTENSION)) + "s";
          float strWidth = Text::width(str);
          Text::draw(str, W - strWidth - offsetX, offsetY, COLORS::BLUE.luma(0.75));
       }

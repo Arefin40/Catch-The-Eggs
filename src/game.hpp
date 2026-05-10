@@ -240,7 +240,7 @@ public:
       }
 
       basket.update(dt, airflow.strength);
-      spawner.update(dt, airflow.strength);
+      spawner.update(dt, airflow.strength, GAME_DURATION - timeRemaining, slowFallTimer > 0);
       handleEggCatch();
       handlePerkCatch();
    }
