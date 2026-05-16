@@ -15,6 +15,7 @@
 #include "spawner.hpp"
 #include "basket.hpp"
 #include "collision.hpp"
+#include "audio.hpp"
 #pragma endregion
 
 #pragma region Globals
@@ -56,6 +57,8 @@ private:
    float wideBasketTimer = 0;
    float slowFallTimer = 0;
    float timeExtensionTimer = 0;
+   bool hitBomb = false;
+   bool highScoreSoundPlayed = false;
 
    GameState state;
    Basket basket;
@@ -93,10 +96,13 @@ public:
    void init()
    {
       score = 0;
+      hitBomb = false;
       wideBasketTimer = 0;
       slowFallTimer = 0;
       timeExtensionTimer = 0;
       timeRemaining = GAME_DURATION;
+      Audio::init();
+      Audio::initBackgroundMusic();
       Draw::init();
       basket.reset();
       spawner.init(&normalChickenTex, &evilChickenTex);
@@ -112,6 +118,9 @@ public:
    void endGame(bool byBomb)
    {
       state = GameState::GAME_OVER;
+      hitBomb = byBomb;
+      Audio::stopMusic();
+      Audio::play(byBomb ? SOUND::BOMB : SOUND::GAME_OVER);
    }
 
    void saveHighScore()
@@ -132,6 +141,12 @@ public:
       {
          highScore = score;
          saveHighScore();
+
+         if (!highScoreSoundPlayed)
+         {
+            Audio::play(SOUND::NEW_HIGH_SCORE);
+            highScoreSoundPlayed = true;
+         }
       }
    }
 
@@ -160,6 +175,18 @@ public:
             {
                endGame(true);
                return;
+            }
+
+            switch (egg.getType())
+            {
+            case EggType::GOLDEN:
+               Audio::play(SOUND::GOLDEN_EGG);
+               break;
+            case EggType::POOP:
+               Audio::play(SOUND::POOP);
+               break;
+            default:
+               break;
             }
 
             updateScore(egg.getScore());
@@ -194,6 +221,7 @@ public:
                break;
             }
 
+            Audio::play(SOUND::PERK);
             spawner.deletePerk(i);
             break;
          }
@@ -266,12 +294,15 @@ public:
          break;
 
       case GameState::HELP:
+         Screen::HelpMenu();
          break;
 
       case GameState::PAUSED:
+         Screen::PauseOverlay();
          break;
 
       case GameState::GAME_OVER:
+         Screen::GameOverOverlay(score, highScore, hitBomb);
          break;
 
       default:
@@ -308,12 +339,26 @@ public:
             basket.setDirection(LEFT);
          else if (key == 'd' || key == 'D')
             basket.setDirection(RIGHT);
+         break;
+
+      case GameState::PAUSED:
+         if (key == 'p' || key == 'P')
+            state = GameState::PLAYING;
+         else if (key == ESC_KEY)
+         {
+            state = GameState::MENU;
+            Audio::initBackgroundMusic();
+         }
+         break;
 
       case GameState::GAME_OVER:
          if (key == 'r' || key == 'R')
             restartGame();
          else if (key == ESC_KEY)
+         {
             state = GameState::MENU;
+            Audio::initBackgroundMusic();
+         }
          break;
 
       default:

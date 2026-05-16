@@ -14,8 +14,8 @@
 
 namespace Font
 {
-   constexpr void *SM = GLUT_BITMAP_HELVETICA_12;
-   constexpr void *LG = GLUT_BITMAP_HELVETICA_18;
+   static void *SM = GLUT_BITMAP_HELVETICA_12;
+   static void *LG = GLUT_BITMAP_HELVETICA_18;
 }
 
 struct Color

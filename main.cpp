@@ -1,4 +1,7 @@
 #pragma region Includes
+#define MINIAUDIO_IMPLEMENTATION
+#include "miniaudio.h"
+
 #ifdef __APPLE__
 #include <GLUT/glut.h>
 #else
